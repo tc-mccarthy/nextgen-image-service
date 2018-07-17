@@ -14,17 +14,42 @@ let app = {
 		});
 	},
 
+	jp2: function (req, res, next) {
+		const image = new Image(req.originalUrl);
+
+		image.get().then(() => {
+			return image.toJP2();
+		}).then((buffer) => {
+			res.end(buffer, "binary");
+		}).catch((err) => {
+			console.log(err);
+			res.send(JSON.stringify(err));
+		});
+	},
+
+	jxr: function (req, res, next) {
+		const image = new Image(req.originalUrl);
+
+		image.get().then(() => {
+			return image.toJXR();
+		}).then((buffer) => {
+			res.end(buffer, "binary");
+		}).catch((err) => {
+			console.log(err);
+			res.send(JSON.stringify(err));
+		});
+	},
+
 	webp: function (req, res, next) {
 		const image = new Image(req.originalUrl);
 
 		image.get().then(() => {
-			console.log(image);
 			return image.toWebP();
 		}).then((buffer) => {
-			// res.send(200);
 			res.end(buffer, "binary");
 		}).catch((err) => {
-			res.send(err);
+			console.log(err);
+			res.send(JSON.stringify(err));
 		});
 	}
 };
