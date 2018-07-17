@@ -17,9 +17,11 @@ let app = {
 	jp2: function (req, res, next) {
 		const image = new Image(req.originalUrl);
 
+
 		image.get().then(() => {
 			return image.toJP2();
 		}).then((buffer) => {
+			res.header("Content-Type", "image/jp2");
 			res.end(buffer, "binary");
 		}).catch((err) => {
 			console.log(err);
@@ -46,6 +48,7 @@ let app = {
 		image.get().then(() => {
 			return image.toWebP();
 		}).then((buffer) => {
+			res.header("Content-Type", "image/webp");
 			res.end(buffer, "binary");
 		}).catch((err) => {
 			console.log(err);
