@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const sharp = require('sharp');
+const config = require('./config.js');
 
 class Image {
   buffer = false
@@ -7,6 +8,7 @@ class Image {
 
   constructor (url) {
     this.url = url;
+    this.URL = new URL(url);
   }
 
   get () {
@@ -14,6 +16,11 @@ class Image {
       if (this.buffer) {
         resolve(this.buffer);
       } else {
+        if (config.domains.indexOf(this.URL.host) === -1) {
+          const e = new TypeError(`${this.URL.host} is not on the allowlist`);
+          reject(e);
+        }
+
         fetch(this.url, {
           headers: {
             'User-Agent': 'MDC Image Service 2.0'
@@ -29,9 +36,15 @@ class Image {
     });
   }
 
-  async convert (format) {
-    const imageBuffer = await this.get();
-    return sharp(imageBuffer).toFormat(format).toBuffer();
+  convert (format) {
+    return new Promise(async (resolve, reject) => {
+      this.get().then(imageBuffer => {
+        return sharp(imageBuffer)
+          .toFormat(format)
+          .toBuffer();
+      }).then(imageBuffer => resolve(imageBuffer))
+        .catch(e => reject(e));
+    });
   }
 
   webp () {

@@ -16,9 +16,10 @@ app.get(/convert\/(.+)\.(jpg|webp)(?:\\?.+)?$/, (req, res) => {
     res.set(image.headers);
     res.writeHead(200, { 'Content-Type': `image/${format}` });
     res.end(imageBuffer, 'binary');
-  }).catch(e => (resolve, reject) => {
+  }).catch(e => {
+    const { message, stack } = e;
     res.writeHead(400, { 'Content-Type': 'application.json' });
-    res.end(JSON.stringify(e));
+    res.end(JSON.stringify({ success: false, message, stack }));
   });
 });
 
