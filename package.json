@@ -9,7 +9,7 @@
     "node-fetch": "^2.6.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "sharp": "github:lovell/sharp"
+    "sharp": "github:lovell/sharp#avif"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
