@@ -9,7 +9,7 @@
     "node-fetch": "^2.6.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "sharp": "github:lovell/sharp#avif"
+    "sharp": "^0.27.0-alpha1"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
@@ -21,10 +21,6 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tc-mccarthy/nextgen-image-service.git"
   },
   "author": "TC McCarthy",
   "license": "MIT",
