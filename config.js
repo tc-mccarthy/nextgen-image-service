@@ -1,14 +1,18 @@
 module.exports = {
   app: {
-    port: 8087,
+    port: 28087,
     supported_formats: {
-      jpg: 'image/jpeg',
-      webp: 'image/webp',
-      avif: 'image/avif'
-    }
+      jpg: "image/jpeg",
+      webp: "image/webp",
+      avif: "image/avif",
+    },
+    path_prefix: {
+      local: "/", //any path information that precedes endpoints. Must include a trailing slash
+      stage: "/", //any path information that precedes endpoints. Must include a trailing slash
+      prod: "/", //any path information that precedes endpoints. Must include a trailing slash
+    },
   },
 
-  domains: [
-    'cdn.totalcomputersusa.com'
-  ]
+  //list of domains that are allowed origins for this service
+  domains: [],
 };

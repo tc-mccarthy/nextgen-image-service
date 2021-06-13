@@ -1,36 +1,36 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const config = require('./config.js');
-const { port } = config.app;
-const Image = require('./image.js');
+const config = require("./config.js");
+let { port, path_prefix } = config.app;
+const createError = require("http-errors");
+const os = require("os");
 
-app.get(/convert\/(.+)\.(\w{3,4})(?:\\?.+)?$/, (req, res) => {
-  const format = req.params['1'];
-  let url = req.params['0'];
+const convertHandler = require("./handlers/getConvert.js");
+const convertBaseHandler = require("./handlers/getConvertBase.js");
+const indexHandler = require("./handlers/getIndex.js");
 
-  if (!/\.(\w{3,4})$/.test(url)) {
-    url += `.${format}`;
-  }
+path_prefix = path_prefix[process.env.ENV];
+console.log(path_prefix);
+app.get(/convert\/(.+)\.(\w{3,4})(?:\\?.+)?$/, convertHandler);
 
-  console.log(format);
-  console.log(url);
+app.get(`/`, indexHandler);
+app.get(`/index.html`, indexHandler);
+app.get(`${path_prefix}`, indexHandler);
+app.get(`${path_prefix}index.html`, indexHandler);
 
-  const image = new Image(`https://${url}`);
-  image.convert(format).then(imageBuffer => {
-    res.set(image.headers);
-    res.writeHead(200);
-    res.end(imageBuffer, 'binary');
-  }).catch(e => {
-    res.writeHead(400, { 'Content-Type': 'application.json' });
-    res.end(JSON.stringify({ success: false, ...e }));
+app.use(function (req, res, next) {
+  next(createError(404, "Page not found"));
+});
+
+// Handle Errors
+app.use(function (err, req, res, next) {
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message,
+    ...err,
   });
 });
 
-app.get('/', (req, res) => {
-  res.writeHead(200, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({ success: true, version: '1.0', message: 'This API will return nextgen versions of requested images from approved domains', supported_formats: config.app.supported_formats }));
-});
-
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`Image service listening at http://localhost:${port}`);
 });

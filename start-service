@@ -1,0 +1,7 @@
+export NODE_OPTIONS=--insecure-http-parser
+
+if [[ $ENV == "local" ]]; then
+    npm run start:dev
+else
+    npm run start
+fi
